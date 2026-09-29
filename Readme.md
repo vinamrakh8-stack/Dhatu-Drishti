@@ -124,7 +124,7 @@ On first run, the project creates an admin user if none exists. The default valu
 
 - Email: admin@dhatudrishti.local
 - Name: Administrator
-- Password: ChangeMe#Admin2026
+- Password: b0iS3qX6rNCFSjTDNT6AZO6d
 
 It is strongly recommended that you change this password immediately in a real environment.
 
