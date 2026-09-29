@@ -1,9 +1,0 @@
-# Additional runtime dependencies for the AI Analysis module.
-# The base application already provides: flask, pandas, numpy, requests.
-#
-#   ./venv/bin/python -m pip install -r requirements-ai.txt
-
-python-docx>=1.1.0     # DOCX report download (/api/ai-analysis/report/docx)
-reportlab>=4.0.0       # PDF report download  (/api/ai-analysis/report/pdf)
-python-dotenv>=1.0.0   # optional: loads GEMINI_API_KEY from .env (a stdlib
-                       # fallback parser is used when this is absent)
