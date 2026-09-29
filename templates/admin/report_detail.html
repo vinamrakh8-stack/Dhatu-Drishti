@@ -1,0 +1,143 @@
+{% extends "admin/base.html" %}
+{% set report = record.report %}
+{% set meta = record.structured %}
+{% set trend = report.get('production_trend') or {} %}
+{% set prediction = report.get('short_term_prediction') or {} %}
+{% set risk = meta.get('risk') or {} %}
+{% set summary = meta.get('data_summary') %}
+
+{% block title %}{{ record.mine_name }} report — Admin · Dhatu Drishti{% endblock %}
+
+{% block page %}
+<div class="page-head">
+ <div>
+  <div class="eyebrow">AI REPORT HISTORY</div>
+  <h1>{{ record.mine_name }}</h1>
+  <p>
+   Generated {{ record.created_at.strftime('%d %b %Y at %H:%M UTC') if record.created_at else 'at an unknown time' }}
+   {% if record.model_name %} · model <span class="mono">{{ record.model_name }}</span>{% endif %}
+  </p>
+ </div>
+ <div class="head-actions">
+  <a class="btn" href="{{ url_for('admin.dashboard', _anchor='reports') }}">← Back to history</a>
+  {% if report %}
+  <a class="btn btn-cyan" href="{{ url_for('admin.report_download', report_id=record.id, kind='pdf') }}">Download PDF</a>
+  <a class="btn btn-cyan" href="{{ url_for('admin.report_download', report_id=record.id, kind='docx') }}">Download DOCX</a>
+  {% endif %}
+  <button class="btn btn-danger" type="button"
+          data-action="{{ url_for('admin.report_delete', report_id=record.id) }}"
+          data-confirm="Are you sure you want to delete this report?"
+          data-label="Delete">Delete</button>
+ </div>
+</div>
+
+<!-- summary -->
+<div class="card" style="--card-accent:var(--ore)">
+ <div class="kv">
+  <div class="meta"><span>Mine</span><b>{{ record.mine_name }}</b></div>
+  <div class="meta"><span>Generated</span><b>{{ record.created_at.strftime('%d %b %Y %H:%M') if record.created_at else '—' }}</b></div>
+  <div class="meta"><span>Risk</span><b>
+   {% if record.risk_level %}<span class="badge {{ record.risk_tone }}"><span class="dot"></span>{{ record.risk_level }}</span>
+   {% elif risk.get('level') %}<span class="badge muted">{{ risk.get('level') }} (risk model)</span>
+   {% else %}<span class="badge muted">Not available</span>{% endif %}
+  </b></div>
+  <div class="meta"><span>Model used</span><b class="mono">{{ record.model_name or 'Not available' }}</b></div>
+  <div class="meta"><span>Location</span><b>{{ meta.get('district') or 'Not available' }}{% if meta.get('state') %}, {{ meta.get('state') }}{% endif %}</b></div>
+  <div class="meta"><span>Dataset</span><b>
+   {% if summary %}{{ summary.get('records') }} records · {{ summary.get('date_range') }}
+   {% else %}Not available{% endif %}
+  </b></div>
+ </div>
+</div>
+
+<div class="result-grid grid-2" style="margin-top:18px">
+ <div class="card">
+  <div class="analysis-block">
+   <h3>Mine overview</h3>
+   <p>{{ report.get('overview') or 'Not available' }}</p>
+  </div>
+  <div class="analysis-block">
+   <h3>Current operational condition</h3>
+   <p>{{ report.get('operational_condition') or 'Not available' }}</p>
+  </div>
+  <div class="analysis-block">
+   <h3>Historical production trend</h3>
+   <p>{% if trend.get('direction') %}<span class="badge {{ 'ok' if trend.get('direction') == 'INCREASE' else 'danger' if trend.get('direction') == 'DECREASE' else 'info' }}">{{ trend.get('direction') }}</span>{% endif %}
+      {{ trend.get('evidence') or 'Not available' }}</p>
+  </div>
+  <div class="analysis-block">
+   <h3>Reserve status</h3>
+   <p>{{ report.get('reserve_status') or 'Not available' }}</p>
+  </div>
+  <div class="analysis-block">
+   <h3>Equipment / downtime risk</h3>
+   <p>{{ report.get('equipment_risk') or 'Not available' }}</p>
+  </div>
+  <div class="analysis-block">
+   <h3>Weather impact</h3>
+   <p>{{ report.get('weather_impact') or 'Not available' }}</p>
+  </div>
+  <div class="analysis-block">
+   <h3>Geographic / environmental risk</h3>
+   <p>{{ report.get('geographic_risk') or 'Not available' }}</p>
+  </div>
+ </div>
+
+ <div class="card" style="--card-accent:var(--cyan)">
+  <div class="analysis-block">
+   <h3>Prediction</h3>
+   <p>
+    {% if prediction.get('direction') %}<span class="badge info">Direction: {{ prediction.get('direction') }}</span>{% endif %}
+    {% if prediction.get('risk') %}<span class="badge {{ record.risk_tone if prediction.get('risk') == record.risk_level else 'muted' }}">Risk: {{ prediction.get('risk') }}</span>{% endif %}
+    {% if prediction.get('confidence') %}<span class="badge muted">Confidence: {{ prediction.get('confidence') }}</span>{% endif %}
+   </p>
+   <p style="margin-top:10px">{{ prediction.get('forecast') or 'Not available' }}</p>
+  </div>
+
+  <div class="analysis-block">
+   <h3>AI findings</h3>
+   <ul class="bullets">
+    <li>{{ report.get('operational_condition') or 'Not available' }}</li>
+    <li>{{ report.get('weather_impact') or 'Not available' }}</li>
+   </ul>
+  </div>
+
+  <div class="analysis-block">
+   <h3>Risk factors</h3>
+   <ul class="bullets">
+    {% for item in report.get('risk_factors') or [] %}<li>{{ item }}</li>
+    {% else %}<li>Not available</li>{% endfor %}
+   </ul>
+  </div>
+
+  <div class="analysis-block">
+   <h3>Recommendations</h3>
+   <ul class="bullets">
+    {% for item in report.get('recommended_actions') or [] %}<li>{{ item }}</li>
+    {% else %}<li>Not available</li>{% endfor %}
+   </ul>
+  </div>
+
+  <div class="analysis-block">
+   <h3>Data limitations</h3>
+   <ul class="limit-list">
+    {% for item in report.get('data_limitations') or [] %}<li>{{ item }}</li>
+    {% else %}<li>Not available</li>{% endfor %}
+   </ul>
+  </div>
+ </div>
+</div>
+
+{% if not report and record.report_text %}
+<div class="card" style="--card-accent:var(--amber);margin-top:18px">
+ <div class="analysis-block">
+  <h3>Stored report</h3>
+  <p style="white-space:pre-wrap">{{ record.report_text }}</p>
+ </div>
+</div>
+{% endif %}
+
+<div class="disclaimer">
+ {{ meta.get('disclaimer') or 'Predictions are model-generated estimates, not guaranteed future observations. Validate before making operational decisions.' }}
+</div>
+{% endblock %}

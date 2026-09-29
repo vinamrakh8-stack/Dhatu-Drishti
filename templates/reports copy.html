@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dhatu Drishti — Reports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#050A10; --bg-deep:#03060A; --panel:#0C1620; --panel-2:#0F1C29;
+      --glass:rgba(255,255,255,.045); --glass-brd:rgba(255,255,255,.09); --line:rgba(255,255,255,.08);
+      --text:#EDF4F7; --text-dim:#94A9B8; --text-faint:#59707F;
+      --green:#27C98B; --green-soft:rgba(39,201,139,.14); --cyan:#2FCFE8; --cyan-soft:rgba(47,207,232,.14);
+      --ore:#E3A857; --ore-soft:rgba(227,168,87,.14); --amber:#F0B429; --amber-soft:rgba(240,180,41,.14);
+      --red:#EF6461; --red-soft:rgba(239,100,97,.14);
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      font-family:'Inter',sans-serif; background:var(--bg); color:var(--text);
+      -webkit-font-smoothing:antialiased; overflow-x:hidden;
+    }
+    .grid-field {
+      position:fixed; inset:0; z-index:0; pointer-events:none;
+      background-image:linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+      background-size:46px 46px; mask-image:radial-gradient(ellipse 85% 55% at 50% 0%, black 35%, transparent 88%);
+    }
+    header {
+      position:sticky; top:0; z-index:60; display:flex; align-items:center; justify-content:space-between; gap:20px;
+      padding:14px clamp(16px,3vw,40px); background:rgba(5,10,16,.82); backdrop-filter:blur(18px) saturate(150%);
+      border-bottom:1px solid var(--line);
+    }
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-logo{width:42px;height:42px;flex:0 0 42px}
+    .brand-text{display:flex;flex-direction:column;line-height:1.12;min-width:0}
+    .brand-text .name{font-family:'Manrope';font-size:19px;font-weight:800;background:linear-gradient(95deg,#fff 40%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .brand-text .sub{font-size:10px;color:var(--text-faint);letter-spacing:.14em;margin-top:2px;font-weight:600;white-space:nowrap}
+    .moil-tag{margin-left:10px;padding:5px 11px;font-size:11px;font-weight:700;letter-spacing:.09em;color:var(--ore);border:1px solid rgba(227,168,87,.32);border-radius:100px;background:var(--ore-soft)}
+    nav{display:flex;align-items:center;gap:2px}nav a{color:var(--text-dim);text-decoration:none;font-size:14px;font-weight:500;padding:9px 14px;border-radius:9px;position:relative}
+    nav a:hover,nav a.active{color:var(--text);background:var(--glass)}nav a.active::after{content:'';position:absolute;left:14px;right:14px;bottom:3px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--green))}
+    .header-actions{display:flex;align-items:center;gap:8px}.back-btn,.profile-btn,.menu-btn{border:1px solid var(--glass-brd);background:var(--glass);color:var(--text);border-radius:10px;min-height:38px;padding:0 12px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.profile-btn{width:38px;padding:0}.menu-btn{display:none;font-size:20px}
+    main{position:relative;z-index:1;max-width:1200px;margin:auto;padding:clamp(24px,4vw,48px) clamp(16px,3vw,40px) 70px}
+    .page-head{margin-bottom:26px}
+    .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--green);background:var(--green-soft);border:1px solid rgba(39,201,139,.25);padding:7px 12px;border-radius:100px;margin-bottom:14px}
+    h1{font-family:'Manrope';font-size:clamp(28px,4vw,42px);line-height:1.1}
+    .intro{margin-top:12px;color:var(--text-dim);font-size:15px;max-width:760px;line-height:1.6}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:30px}
+    .card{background:linear-gradient(160deg,var(--glass),rgba(255,255,255,.015));border:1px solid var(--glass-brd);border-radius:18px;padding:22px;position:relative;overflow:hidden} .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--card-accent,var(--green)),transparent);opacity:.7}
+    .card h2{font-family:'Manrope';font-size:20px; margin-bottom:8px}
+    .card p{color:var(--text-dim);font-size:13px;line-height:1.7}
+    .card .meta{margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--text-faint);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+    .btn{border:1px solid var(--glass-brd);border-radius:10px;padding:11px 16px;font-weight:700;color:var(--text);background:var(--glass);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}.btn-primary{background:linear-gradient(120deg,var(--green),#1ca46f);color:#03140c;border-color:transparent}.btn-secondary{background:var(--cyan-soft);color:var(--cyan);border-color:rgba(47,207,232,.3)}
+    .button-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    footer{position:relative;z-index:1;max-width:1500px;margin:auto;padding:25px clamp(16px,3vw,40px) 35px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;color:var(--text-faint);font-size:11.5px}
+    @media(max-width:900px){ nav{display:none}.menu-btn{display:block}. .grid{grid-template-columns:1fr;}}
+    @media(max-width:700px){ header{padding:12px 14px}. .brand-text .sub,.moil-tag{display:none} .back-btn{display:none} main{padding:24px 14px 55px} }
+  </style>
+</head>
+<body>
+  <div class="grid-field"></div>
+
+  <header>
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 44 44" fill="none">
+        <rect x=".5" y=".5" width="43" height="43" rx="11" fill="#081018" stroke="rgba(255,255,255,.09)"/>
+        <path d="M7 22C12 15 17 12 22 12c5 0 10 3 15 10-5 7-10 10-15 10-5 0-10-3-15-10Z" stroke="#2FCFE8" stroke-width="1.6"/>
+        <path d="m22 16.5 4 5.5-4 5.5-4-5.5 4-5.5Z" fill="#27C98B"/>
+        <ellipse cx="22" cy="22" rx="17.5" ry="7" stroke="#E3A857" stroke-width="1" stroke-dasharray="1.6 2.6"/>
+      </svg>
+      <div class="brand-text"><span class="name">DHATU DRISHTI</span><span class="sub">AI-POWERED MINING INTELLIGENCE</span></div>
+      <span class="moil-tag">MOIL</span>
+    </div>
+
+    <nav>
+      <a href="/">Dashboard</a>
+      <a href="/weather">Weather</a>
+      <a href="/machinery">Machinery</a>
+      <a href="/ai-analysis">AI Analysis</a>
+      <a href="/reports" class="active">Reports</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="back-btn" href="/" aria-label="Back to dashboard">← Dashboard</a>
+      <button class="profile-btn" type="button" aria-label="Profile">◉</button>
+      <button class="menu-btn" type="button" aria-label="Open navigation">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-head">
+      <div class="eyebrow">REPORTS & EXPORTS</div>
+      <h1>Operational reports</h1>
+      <p class="intro">Track field summaries, weather risk snapshots, machinery health reports and machine-ready insights from a single dashboard.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card" style="--card-accent:var(--green)">
+        <h2>Daily operations</h2>
+        <p>Production summary, mine conditions, and operational highlights for the current shift.</p>
+        <div class="meta"><span>Updated</span><strong>Today</strong></div>
+        <div class="button-row">
+          <a href="/weather" class="btn btn-primary">View weather</a>
+        </div>
+      </div>
+
+      <div class="card" style="--card-accent:var(--cyan)">
+        <h2>Machinery health</h2>
+        <p>Fleet utilization, overdue maintenance and equipment readiness across mine sites.</p>
+        <div class="meta"><span>Status</span><strong>Healthy</strong></div>
+        <div class="button-row">
+          <a href="/machinery" class="btn btn-secondary">Open machinery</a>
+        </div>
+      </div>
+
+      <div class="card" style="--card-accent:var(--ore)">
+        <h2>AI analysis summary</h2>
+        <p>Predictive risk outlook, recommendation list and recommended actions for field operations.</p>
+        <div class="meta"><span>Mode</span><strong>Auto</strong></div>
+        <div class="button-row">
+          <a href="/ai-analysis" class="btn btn-primary">Run analysis</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>Dhatu Drishti · Reports</span>
+    <span>Prototype · Flask/MySQL/AI backend ready</span>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dhatu Drishti — Reports</title>
+<style>
+:root{--bg:#050A10;--panel:#0C1620;--glass:rgba(255,255,255,.045);--brd:rgba(255,255,255,.09);--line:rgba(255,255,255,.08);--text:#EDF4F7;--dim:#94A9B8;--faint:#59707F;--green:#27C98B;--cyan:#2FCFE8;--ore:#E3A857;--amber:#F0B429;--red:#EF6461}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}button,select,input{font:inherit}.grid{position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:46px 46px}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:14px 3vw;background:rgba(5,10,16,.86);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:11px}.logo{width:42px}.name{font-weight:800;font-size:19px}.sub{display:block;color:var(--faint);font-size:9px;letter-spacing:.14em}.moil{margin-left:8px;color:var(--ore);border:1px solid #795d2c;padding:5px 10px;border-radius:20px;font-size:11px}nav{display:flex;gap:4px}nav a{color:var(--dim);text-decoration:none;padding:9px 12px;border-radius:9px;font-size:14px}nav a.active,nav a:hover{background:var(--glass);color:var(--text)}.actions{display:flex;gap:8px}.btn,.small{border:1px solid var(--brd);background:var(--glass);color:var(--text);border-radius:9px;padding:9px 12px;font-weight:700}.menu{display:none}.mobile-nav{display:none;position:absolute;top:100%;left:0;right:0;padding:10px 14px;background:rgba(5,10,16,.98);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);box-shadow:0 18px 35px rgba(0,0,0,.35)}.mobile-nav.open{display:grid;gap:3px}.mobile-nav a{color:var(--dim);text-decoration:none;padding:13px 12px;border-radius:9px;font-size:14px}.mobile-nav a:hover,.mobile-nav a.active{background:var(--glass);color:var(--text)}.mobile-nav a.active{border-left:2px solid var(--cyan)}
+main{position:relative;max-width:1500px;margin:auto;padding:42px 3vw 70px}.head{display:flex;justify-content:space-between;gap:20px;margin-bottom:25px}.eyebrow{display:inline-block;color:var(--cyan);background:rgba(47,207,232,.12);border:1px solid rgba(47,207,232,.25);border-radius:20px;padding:7px 12px;font-size:10px;font-weight:800;letter-spacing:.1em}.head h1{font-size:clamp(30px,4vw,44px);margin:12px 0 8px}.head p{max-width:760px;color:var(--dim);font-size:14px;line-height:1.6}.card{background:linear-gradient(160deg,var(--glass),rgba(255,255,255,.015));border:1px solid var(--brd);border-radius:18px;padding:21px;position:relative;overflow:hidden}.card:before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.filters{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px}.field{display:grid;gap:6px}.field label{font-size:10px;color:var(--faint);font-weight:800;text-transform:uppercase}.field select{background:#09131d;color:var(--text);border:1px solid var(--brd);padding:11px;border-radius:9px}.primary{background:linear-gradient(120deg,var(--cyan),#1ca8bd);color:#031016;border:0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:14px}.stat{padding:16px;border:1px solid var(--brd);border-radius:13px;background:rgba(255,255,255,.025)}.stat small{color:var(--faint);font-size:10px}.stat b{display:block;font-size:23px;margin-top:6px}.cyan{color:var(--cyan)}.green{color:var(--green)}.amber{color:var(--amber)}
+section{margin-top:28px}.title{display:flex;justify-content:space-between;margin-bottom:13px}.title h2{font-size:20px;margin:0}.title p{font-size:12px;color:var(--faint);margin:3px 0}
+.tabs{display:flex;gap:7px;margin-bottom:13px;overflow:auto}.tab{white-space:nowrap}.tab.active{border-color:rgba(47,207,232,.4);color:var(--cyan);background:rgba(47,207,232,.1)}
+.history{display:grid;gap:9px}.row{display:grid;grid-template-columns:1.4fr .8fr .8fr 1.7fr auto;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.018)}.row strong{font-size:13px}.meta{display:block;color:var(--dim);font-size:11px;line-height:1.5}.badge{display:inline-block;padding:5px 8px;border-radius:20px;font-size:10px;font-weight:800}.ai{color:var(--cyan);background:rgba(47,207,232,.12)}.high{color:var(--red);background:rgba(239,100,97,.12)}.medium{color:var(--amber);background:rgba(240,180,41,.12)}.low{color:var(--green);background:rgba(39,201,139,.12)}
+.table-wrap{overflow:auto}.weather{width:100%;min-width:760px;border-collapse:collapse}.weather th{color:var(--faint);font-size:10px;text-align:left;padding:12px;border-bottom:1px solid var(--line)}.weather td{padding:13px 12px;border-bottom:1px solid var(--line);font-size:12px;color:var(--dim)}.weather td strong{color:var(--text)}.empty{text-align:center;color:var(--faint);padding:30px;border:1px dashed var(--brd);border-radius:12px}
+.modal-bg{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);backdrop-filter:blur(7px);align-items:center;justify-content:center;padding:18px}.modal-bg.open{display:flex}.modal{width:min(650px,100%);max-height:90vh;overflow:auto;background:#09131d;border:1px solid var(--brd);border-radius:17px;padding:20px}.modal-head{display:flex;justify-content:space-between}.modal h3{margin:0}.close{background:var(--glass);color:var(--text);border:1px solid var(--brd);border-radius:8px;width:34px;height:34px}.modal pre{white-space:pre-wrap;color:var(--dim);font-size:11px;background:#050b11;padding:14px;border-radius:10px}
+footer{border-top:1px solid var(--line);padding:24px 3vw;color:var(--faint);font-size:11px;display:flex;justify-content:space-between}
+@media(max-width:1050px){nav{display:none}.menu{display:block}.dash{display:none}.filters{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:1.5fr 1fr 1fr auto}.row>:nth-child(4){display:none}}
+@media(max-width:650px){header{padding:10px 12px}.brand .logo{width:38px}.name{font-size:16px}.sub,.moil{display:none}main{padding:24px 12px 55px}.head{display:block}.filters,.stats{grid-template-columns:1fr}.row{grid-template-columns:1fr}.row>:nth-child(4){display:block}.actions{margin-top:10px}footer{display:block}footer span{display:block;margin-bottom:7px}}
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<header>
+<div class="brand"><svg class="logo" viewBox="0 0 44 44" fill="none"><rect x=".5" y=".5" width="43" height="43" rx="11" fill="#081018" stroke="rgba(255,255,255,.09)"/><path d="M7 22C12 15 17 12 22 12c5 0 10 3 15 10-5 7-10 10-15 10-5 0-10-3-15-10Z" stroke="#2FCFE8" stroke-width="1.6"/><path d="m22 16.5 4 5.5-4 5.5-4-5.5 4-5.5Z" fill="#27C98B"/></svg><div><span class="name">DHATU DRISHTI</span><span class="sub">AI-POWERED MINING INTELLIGENCE</span></div><span class="moil">MOIL</span></div>
+<nav><a href="{{ url_for('index') }}">Dashboard</a><a href="{{ url_for('weather') }}">Weather</a><a href="{{ url_for('machinery') }}">Machinery</a><a href="{{ url_for('ai_analysis') }}">AI Analysis</a><a href="#reports" class="active">Reports</a></nav>
+<div class="actions"><button class="btn menu" id="menu">☰</button></div>
+<div class="mobile-nav" id="mobileNav"><a href="{{ url_for('index') }}">Dashboard</a><a href="{{ url_for('weather') }}">Weather</a><a href="{{ url_for('machinery') }}">Machinery</a><a href="{{ url_for('ai_analysis') }}">AI Analysis</a><a href="{{ url_for('reports') }}#reports" class="active">Reports</a></div>
+</header>
+<main id="reports">
+<div class="head"><div><span class="eyebrow">REPORT CENTER</span><h1>Reports & History</h1><p>Review previous AI mining analyses and historical weather prediction data for each mining field. Records can be loaded directly from the Flask backend.</p></div></div>
+
+<section><div class="title"><div><h2>History Filters</h2><p>State → district → mining field</p></div></div><div class="card">
+<div class="filters">
+<div class="field"><label>State</label><select id="state"><option value="">All states</option><option>Maharashtra</option><option>Madhya Pradesh</option></select></div>
+<div class="field"><label>District</label><select id="district" disabled><option value="">All districts</option></select></div>
+<div class="field"><label>Mining Field</label><select id="mine" disabled><option value="">All mining fields</option></select></div>
+<button class="btn primary" id="apply">Apply Filter</button>
+</div></div>
+<div class="stats"><div class="stat"><small>Total Reports</small><b id="total">0</b></div><div class="stat"><small>AI Analyses</small><b class="cyan" id="aic">0</b></div><div class="stat"><small>Weather Predictions</small><b class="green" id="wx">0</b></div><div class="stat"><small>Latest Activity</small><b class="amber" id="latest">—</b></div></div></section>
+
+<section><div class="title"><div><h2>AI Analysis History</h2><p>Previously generated mining intelligence reports</p></div></div><div class="card">
+<div class="tabs"><button class="small tab active" data-risk="all">All</button><button class="small tab" data-risk="high">High Risk</button><button class="small tab" data-risk="medium">Medium Risk</button><button class="small tab" data-risk="low">Low Risk</button></div>
+<div class="history" id="aiHistory"></div></div></section>
+
+<section><div class="title"><div><h2>Weather Predicted History Data</h2><p>Historical forecasts and prediction outcomes received from backend</p></div></div><div class="card"><div class="table-wrap"><table class="weather"><thead><tr><th>Date</th><th>Mining Field</th><th>Forecast</th><th>Temperature</th><th>Rain</th><th>Prediction Impact</th><th>Action</th></tr></thead><tbody id="weatherHistory"></tbody></table></div></div></section>
+</main>
+<footer><span>Dhatu Drishti · Reports & History</span><span>Prototype · Flask/MySQL backend ready</span></footer>
+
+<div class="modal-bg" id="modal"><div class="modal"><div class="modal-head"><div><h3 id="mtitle">Report Details</h3><p id="msub" class="meta"></p></div><button class="close" onclick="closeModal()">×</button></div><div id="mbody"></div></div></div>
+
+<script>
+const API_BASE="";
+const DATA={
+"Maharashtra":{"Bhandara":["Chikla Mine (MOIL)","Dongri Buzurg Mine (MOIL)"],"Nagpur":["Beldongri Mine (MOIL)","Gumgaon Mine (MOIL)","Kandri Mine (MOIL)","Munsar Mine (MOIL)","New Satak Mine (MOIL)","Old Satak Mine (MOIL)","Pali Manganese Mine","Kothulna Manganese Mine","Kirnapur Manganese Mine","Kawatha Manganese Mine","Kachurwahi–Wadegaon Manganese Mine","Parseoni Manganese Mine"]},
+"Madhya Pradesh":{"Balaghat":["Balaghat Mine (MOIL)","Ukwa Mine (MOIL)","Tirodi Mine (MOIL)","Sitapatore–Sukli Mine (MOIL)","Netra Manganese Mine","Ramrama Manganese Mine","Ghondi Manganese Mine"],"Chhindwara":["Kachidana Manganese Mine","Palaspani Manganese Mine"],"Jabalpur":["Silua Jhansi Manganese Mine","Jhansi Silua Manganese Mine"],"Alirajpur":["Jamli Choti Manganese Mine"],"Jhabua":["Kajli Dongri Manganese Mine"]}};
+/* History is loaded from the backend only. If it cannot be read we show an
+   empty state rather than sample rows presented as real history. */
+let ai=[],wx=[];
+
+const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+state.onchange=()=>{district.innerHTML='<option value="">All districts</option>';mine.innerHTML='<option value="">All mining fields</option>';mine.disabled=true;district.disabled=!state.value;if(state.value)Object.keys(DATA[state.value]).forEach(d=>district.insertAdjacentHTML("beforeend",`<option>${esc(d)}</option>`))};
+district.onchange=()=>{mine.innerHTML='<option value="">All mining fields</option>';mine.disabled=!district.value;if(district.value)DATA[state.value][district.value].forEach(m=>mine.insertAdjacentHTML("beforeend",`<option>${esc(m)}</option>`))};
+function match(r){return(!state.value||r.state===state.value)&&(!district.value||r.district===district.value)&&(!mine.value||r.mine===mine.value)}
+function render(){let ar=ai.filter(match),wr=wx.filter(match),risk=document.querySelector(".tab.active").dataset.risk;if(risk!=="all")ar=ar.filter(x=>x.risk.toLowerCase()===risk);$("total").textContent=ai.filter(match).length+wx.filter(match).length;$("aic").textContent=ai.filter(match).length;$("wx").textContent=wx.filter(match).length;$("latest").textContent=ai.length||wx.length?"Today":"—";
+$("aiHistory").innerHTML=ar.length?ar.map(r=>`<div class="row"><div><strong>${esc(r.mine)}</strong><span class="meta">${esc(r.district)}, ${esc(r.state)} · ${esc(r.date)}</span></div><span class="badge ai">AI ANALYSIS</span><span class="badge ${r.risk.toLowerCase()}">${esc(r.risk)} Risk</span><span class="meta">${esc(r.summary)}</span><div><button class="small" onclick="viewAI('${r.id}')">View</button><button class="small" onclick="downloadReport('${r.id}','ai','pdf')">PDF</button></div></div>`).join(""):'<div class="empty">No AI analysis history found.</div>';
+$("weatherHistory").innerHTML=wr.length?wr.map(r=>`<tr><td>${esc(r.date)}</td><td><strong>${esc(r.mine)}</strong><span class="meta">${esc(r.district)}, ${esc(r.state)}</span></td><td>${esc(r.forecast)}</td><td>${esc(r.temp)}</td><td>${esc(r.rain)}</td><td>${esc(r.impact)}<br><span class="meta">${esc(r.trend)}</span></td><td><button class="small" onclick="viewWX('${r.id}')">View</button></td></tr>`).join(""):'<tr><td colspan="7"><div class="empty">No weather prediction history found.</div></td></tr>'}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");render()});apply.onclick=render;
+function viewAI(id){let r=ai.find(x=>x.id===id);openModal("AI Analysis · "+r.id,`${r.mine} · ${r.date}`,`<pre>${esc(JSON.stringify(r,null,2))}</pre>`)}
+function viewWX(id){let r=wx.find(x=>x.id===id);openModal("Weather Prediction · "+r.id,`${r.mine} · ${r.date}`,`<pre>${esc(JSON.stringify(r,null,2))}</pre>`)}
+function openModal(t,s,b){$("mtitle").textContent=t;$("msub").textContent=s;$("mbody").innerHTML=b;$("modal").classList.add("open")}function closeModal(){$("modal").classList.remove("open")}
+async function downloadReport(id,type,format){try{let r=await fetch(`${API_BASE}/api/reports/${type}/${id}/download/${format}`);if(!r.ok)throw 0;let b=await r.blob(),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=`dhatu-drishti-${type}-${id}.${format}`;a.click();URL.revokeObjectURL(u)}catch(e){alert("Download endpoint is not connected yet. Connect the Flask report download API.")}}
+async function load(){try{let r=await fetch(`${API_BASE}/api/reports/history`);if(!r.ok)throw 0;let d=await r.json();ai=Array.isArray(d.ai_analysis_history)?d.ai_analysis_history:[];wx=Array.isArray(d.weather_prediction_history)?d.weather_prediction_history:[]}catch(e){ai=[];wx=[]}render()}load();
+menu.onclick=()=>document.getElementById("mobileNav").classList.toggle("open");
+document.querySelectorAll(".mobile-nav a").forEach(a=>a.addEventListener("click",()=>document.getElementById("mobileNav").classList.remove("open")));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal();document.getElementById("mobileNav").classList.remove("open")}});
+document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+</script>
+</body>
+</html>

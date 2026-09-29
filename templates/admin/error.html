@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ code }} — Admin · Dhatu Drishti{% endblock %}
+{% block page %}
+<div class="page-head">
+ <div>
+  <div class="eyebrow">ADMIN PANEL</div>
+  <h1>{{ 'Forbidden' if code == 403 else 'Not found' if code == 404 else 'Request failed' }}</h1>
+  <p>{{ message }}</p>
+ </div>
+</div>
+
+<div class="card" style="--card-accent:var(--cyan)">
+ <div class="empty">
+  <b>Error {{ code }}</b>
+  {% if code == 403 %}
+  Your account does not have administrator rights for this action.
+  {% elif code == 404 %}
+  The record or page you requested does not exist. It may have been deleted.
+  {% else %}
+  The request could not be completed. Please retry.
+  {% endif %}
+ </div>
+ <div class="form-actions">
+  <a class="btn" href="{{ url_for('admin.dashboard') }}">Back to admin dashboard</a>
+  <a class="btn btn-cyan" href="/">Go to site</a>
+ </div>
+</div>
+{% endblock %}

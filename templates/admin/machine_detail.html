@@ -1,0 +1,45 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ machine.name }} — Admin · Dhatu Drishti{% endblock %}
+
+{% block page %}
+<div class="page-head">
+ <div>
+  <div class="eyebrow">MACHINE RECORD</div>
+  <h1>{{ machine.name }}</h1>
+  <p><span class="badge {{ machine.status_tone }}"><span class="dot"></span>{{ machine.status }}</span>
+   &nbsp; <span class="mono">{{ machine.machine_id }}</span></p>
+ </div>
+ <div class="head-actions">
+  <a class="btn" href="{{ url_for('admin.dashboard', _anchor='machinery') }}">← Back</a>
+  <a class="btn btn-cyan" href="{{ url_for('admin.machine_edit', machine_pk=machine.id) }}">Edit</a>
+  <button class="btn btn-danger" type="button"
+          data-action="{{ url_for('admin.machine_delete', machine_pk=machine.id) }}"
+          data-confirm="Are you sure you want to delete this machine?"
+          data-label="Delete">Delete</button>
+ </div>
+</div>
+
+<div class="card" style="--card-accent:var(--cyan)">
+ <div class="kv">
+  <div class="meta"><span>Machine ID</span><b class="mono">{{ machine.machine_id }}</b></div>
+  <div class="meta"><span>Machine Name</span><b>{{ machine.name }}</b></div>
+  <div class="meta"><span>Status</span><b>{{ machine.status }}</b></div>
+  <div class="meta"><span>Type</span><b>{{ machine.machine_type or 'Not available' }}</b></div>
+  <div class="meta"><span>Manufacturer</span><b>{{ machine.manufacturer or 'Not available' }}</b></div>
+  <div class="meta"><span>Model</span><b>{{ machine.model or 'Not available' }}</b></div>
+  <div class="meta"><span>Mine</span><b>{{ machine.mine_name or 'Not available' }}</b></div>
+  <div class="meta"><span>Year</span><b>{{ machine.year if machine.year is not none else 'Not available' }}</b></div>
+  <div class="meta"><span>Capacity</span><b>{{ machine.capacity or 'Not available' }}</b></div>
+  <div class="meta wide"><span>Description</span><p>{{ machine.description or 'No description recorded.' }}</p></div>
+ </div>
+</div>
+
+<div class="card" style="--card-accent:var(--ore);margin-top:16px">
+ <div class="kv">
+  <div class="meta"><span>Created</span><b>{{ machine.created_at.strftime('%d %b %Y %H:%M') if machine.created_at else '—' }}</b></div>
+  <div class="meta"><span>Last updated</span><b>{{ machine.updated_at.strftime('%d %b %Y %H:%M') if machine.updated_at else '—' }}</b></div>
+  <div class="meta"><span>Public page</span><b><a href="{{ machine.public_url }}" style="color:var(--cyan)">Open listing ↗</a></b></div>
+ </div>
+</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ 'Add New Machine' if mode == 'new' else 'Edit Machine' }} — Admin · Dhatu Drishti{% endblock %}
+
+{% block page %}
+<div class="page-head">
+ <div>
+  <div class="eyebrow">MACHINERY</div>
+  <h1>{{ 'Add New Machine' if mode == 'new' else 'Edit Machine' }}</h1>
+  <p>
+   {%- if mode == 'new' -%}
+   Register a new piece of equipment. Machine ID must be unique across the fleet.
+   {%- else -%}
+   Update the record for {{ machine.name }}.
+   {%- endif -%}
+  </p>
+ </div>
+ <div class="head-actions">
+  <a class="btn" href="{{ url_for('admin.dashboard', _anchor='machinery') }}">← Back to machinery</a>
+ </div>
+</div>
+
+<div class="card" style="--card-accent:var(--ore)">
+ {% if errors %}
+ <div class="form-errors" role="alert">
+  <b>{{ errors|length }} field{{ 's' if errors|length > 1 }} need attention</b>
+  <ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+ </div>
+ {% endif %}
+
+ <form method="post" action="" autocomplete="off" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <div class="form-grid">
+   <div class="field">
+    <label for="machine_id">Machine ID *</label>
+    <input type="text" id="machine_id" name="machine_id" maxlength="100" required
+           placeholder="e.g. EXC-009" value="{{ values.get('machine_id', '') }}">
+    <span class="hint">Must be unique. Letters, numbers, dot, dash, slash, underscore.</span>
+   </div>
+
+   <div class="field">
+    <label for="name">Machine Name *</label>
+    <input type="text" id="name" name="name" maxlength="200" required
+           placeholder="e.g. Hydraulic Excavator EX-350" value="{{ values.get('name', '') }}">
+   </div>
+
+   <div class="field">
+    <label for="machine_type">Machine Type</label>
+    <input type="text" id="machine_type" name="machine_type" maxlength="100"
+           list="typeList" placeholder="e.g. Excavator"
+           value="{{ values.get('machine_type', '') }}">
+    <datalist id="typeList">
+     {% for v in options.types %}<option value="{{ v }}"></option>{% endfor %}
+    </datalist>
+   </div>
+
+   <div class="field">
+    <label for="manufacturer">Manufacturer</label>
+    <input type="text" id="manufacturer" name="manufacturer" maxlength="200"
+           placeholder="e.g. Caterpillar" value="{{ values.get('manufacturer', '') }}">
+   </div>
+
+   <div class="field">
+    <label for="model">Model</label>
+    <input type="text" id="model" name="model" maxlength="200"
+           placeholder="e.g. CAT 352" value="{{ values.get('model', '') }}">
+   </div>
+
+   <div class="field">
+    <label for="mine_name">Mine</label>
+    <input type="text" id="mine_name" name="mine_name" maxlength="200"
+           list="mineList" placeholder="e.g. Balaghat Mine (MOIL)"
+           value="{{ values.get('mine_name', '') }}">
+    <datalist id="mineList">
+     {% for v in options.mines %}<option value="{{ v }}"></option>{% endfor %}
+    </datalist>
+   </div>
+
+   <div class="field">
+    <label for="status">Status *</label>
+    <select id="status" name="status" required>
+     {% for s in statuses %}
+     <option value="{{ s }}" {% if values.get('status') == s %}selected{% endif %}>{{ s }}</option>
+     {% endfor %}
+    </select>
+   </div>
+
+   <div class="field">
+    <label for="year">Year</label>
+    <input type="number" id="year" name="year" min="1900" max="2100" step="1"
+           placeholder="e.g. 2026" value="{{ values.get('year', '') }}">
+   </div>
+
+   <div class="field full">
+    <label for="capacity">Capacity</label>
+    <input type="text" id="capacity" name="capacity" maxlength="100"
+           placeholder="e.g. 55 t payload" value="{{ values.get('capacity', '') }}">
+   </div>
+
+   <div class="field full">
+    <label for="description">Description</label>
+    <textarea id="description" name="description" maxlength="4000" rows="4"
+              placeholder="Deployment notes, duty cycle, maintenance context…">{{ values.get('description', '') }}</textarea>
+   </div>
+  </div>
+
+  <div class="form-actions">
+   <a class="btn" href="{{ url_for('admin.dashboard', _anchor='machinery') }}">Cancel</a>
+   <button class="btn btn-primary" type="submit">
+    {{ 'Add Machine' if mode == 'new' else 'Save Changes' }}
+   </button>
+  </div>
+ </form>
+</div>
+{% endblock %}

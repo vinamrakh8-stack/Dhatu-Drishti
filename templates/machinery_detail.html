@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dhatu Drishti — {{ machine.name }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+ --bg:#050A10;--panel:#0C1620;--glass:rgba(255,255,255,.045);--glass-brd:rgba(255,255,255,.09);--line:rgba(255,255,255,.08);
+ --text:#EDF4F7;--text-dim:#94A9B8;--text-faint:#59707F;
+ --green:#27C98B;--green-soft:rgba(39,201,139,.14);--cyan:#2FCFE8;--cyan-soft:rgba(47,207,232,.14);
+ --ore:#E3A857;--ore-soft:rgba(227,168,87,.14);--amber:#F0B429;--amber-soft:rgba(240,180,41,.14);
+ --red:#EF6461;--red-soft:rgba(239,100,97,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,select{font:inherit} button{cursor:pointer}
+.grid-field{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(ellipse 85% 55% at 50% 0%,black 35%,transparent 88%)}
+header{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px clamp(16px,3vw,40px);background:rgba(5,10,16,.82);backdrop-filter:blur(18px) saturate(150%);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-logo{width:42px;height:42px;flex:0 0 42px}
+.brand-text{display:flex;flex-direction:column;line-height:1.12}
+.brand-text .name{font-family:'Manrope';font-size:19px;font-weight:800;background:linear-gradient(95deg,#fff 40%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand-text .sub{font-size:10px;color:var(--text-faint);letter-spacing:.14em;margin-top:2px;font-weight:600;white-space:nowrap}
+.moil-tag{margin-left:10px;padding:5px 11px;font-size:11px;font-weight:700;letter-spacing:.09em;color:var(--ore);border:1px solid rgba(227,168,87,.32);border-radius:100px;background:var(--ore-soft)}
+nav{display:flex;align-items:center;gap:2px}
+nav a{color:var(--text-dim);text-decoration:none;font-size:14px;font-weight:500;padding:9px 14px;border-radius:9px;position:relative}
+nav a:hover,nav a.active{color:var(--text);background:var(--glass)}
+nav a.active::after{content:'';position:absolute;left:14px;right:14px;bottom:3px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--green))}
+.header-actions{display:flex;gap:8px}
+.profile-btn,.menu-btn{border:1px solid var(--glass-brd);background:var(--glass);color:var(--text);border-radius:10px;min-height:38px;padding:0 12px}
+.profile-btn{width:38px;padding:0;display:grid;place-items:center}
+.menu-btn{display:none;font-size:20px}
+.mobile-nav{display:none;position:absolute;top:100%;left:0;right:0;padding:10px 16px;background:rgba(5,10,16,.97);border-bottom:1px solid var(--line)}
+.mobile-nav.open{display:grid}
+.mobile-nav a{padding:13px;color:var(--text-dim);text-decoration:none;border-radius:9px}
+main{position:relative;z-index:1;max-width:1100px;margin:auto;padding:clamp(24px,4vw,46px) clamp(16px,3vw,40px) 70px}
+.crumb{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-dim);text-decoration:none;margin-bottom:18px}
+.crumb:hover{color:var(--cyan)}
+.page-head{margin-bottom:22px}
+.eyebrow{display:inline-flex;gap:7px;font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--green);background:var(--green-soft);border:1px solid rgba(39,201,139,.25);padding:7px 12px;border-radius:100px;margin-bottom:13px}
+.page-head h1{font-family:'Manrope';font-size:clamp(26px,3.6vw,38px);line-height:1.15}
+.card{background:linear-gradient(160deg,var(--glass),rgba(255,255,255,.015));border:1px solid var(--glass-brd);border-radius:18px;padding:22px;position:relative;overflow:hidden;backdrop-filter:blur(10px);margin-top:16px}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--card-accent,var(--green)),transparent);opacity:.7}
+.card h2{font-family:'Manrope';font-size:17px;margin-bottom:4px}
+.card .sub{font-size:12.5px;color:var(--text-faint);margin-bottom:16px}
+.detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.meta{background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:9px;padding:13px}
+.meta span{display:block;color:var(--text-faint);font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+.meta b{display:block;margin-top:5px;font-size:14px;font-weight:600;word-break:break-word}
+.meta.mono b{font-family:'JetBrains Mono';font-size:13px}
+.detail-full{grid-column:1/-1}
+.detail-full p{margin-top:6px;font-size:13.5px;line-height:1.7;color:var(--text-dim);white-space:pre-wrap}
+.badge{font-size:10.5px;font-weight:800;padding:6px 11px;border-radius:100px;display:inline-flex;align-items:center;gap:6px}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.ok{color:var(--green);background:var(--green-soft)} .warn{color:var(--amber);background:var(--amber-soft)}
+.danger{color:var(--red);background:var(--red-soft)} .muted{color:var(--text-dim);background:rgba(255,255,255,.06)}
+.btn{border:1px solid var(--glass-brd);border-radius:10px;padding:11px 15px;font-weight:700;color:var(--text);background:var(--glass);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{transform:translateY(-1px)}
+footer{position:relative;z-index:1;max-width:1100px;margin:auto;padding:25px clamp(16px,3vw,40px) 35px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;color:var(--text-faint);font-size:11.5px}
+@media(max-width:1100px){nav{display:none}.menu-btn{display:block}.detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){header{padding:12px 14px}.brand-text .sub,.moil-tag{display:none}main{padding:24px 14px 55px}.detail-grid{grid-template-columns:1fr}footer{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="grid-field"></div>
+
+<header>
+ <div class="brand">
+  <svg class="brand-logo" viewBox="0 0 44 44" fill="none">
+   <rect x=".5" y=".5" width="43" height="43" rx="11" fill="#081018" stroke="rgba(255,255,255,.09)"/>
+   <path d="M7 22C12 15 17 12 22 12c5 0 10 3 15 10-5 7-10 10-15 10-5 0-10-3-15-10Z" stroke="#2FCFE8" stroke-width="1.6"/>
+   <path d="m22 16.5 4 5.5-4 5.5-4-5.5 4-5.5Z" fill="#27C98B"/>
+   <ellipse cx="22" cy="22" rx="17.5" ry="7" stroke="#E3A857" stroke-width="1" stroke-dasharray="1.6 2.6"/>
+  </svg>
+  <div class="brand-text"><span class="name">DHATU DRISHTI</span><span class="sub">AI-POWERED MINING INTELLIGENCE</span></div>
+  <span class="moil-tag">MOIL</span>
+ </div>
+ <nav>
+  <a href="/">Dashboard</a>
+  <a href="/weather">Weather</a>
+  <a href="/machinery" class="active">Machinery</a>
+  <a href="/ai-analysis">AI Analysis</a>
+  <a href="/reports">Reports</a>
+ </nav>
+ <div class="header-actions">
+  <button class="profile-btn" type="button" aria-label="Profile">◉</button>
+  <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu">☰</button>
+ </div>
+ <div class="mobile-nav" id="mobileNav">
+  <a href="/">Dashboard</a>
+  <a href="/weather">Weather</a>
+  <a href="/machinery" class="active">Machinery</a>
+  <a href="/ai-analysis">AI Analysis</a>
+  <a href="/reports">Reports</a>
+ </div>
+</header>
+
+<main>
+ <a class="crumb" href="/machinery">‹ Back to machinery</a>
+
+ <div class="page-head">
+  <div class="eyebrow">EQUIPMENT RECORD</div>
+  <h1>{{ machine.name }}</h1>
+ </div>
+
+ <div class="card">
+  <h2>Machine information</h2>
+  <p class="sub">Registered equipment details.</p>
+  <div class="detail-grid">
+   <div class="meta mono"><span>Machine ID</span><b>{{ machine.machine_id }}</b></div>
+   <div class="meta"><span>Status</span><b><span class="badge {{ machine.status_tone }}"><span class="dot"></span>{{ machine.status }}</span></b></div>
+   <div class="meta"><span>Type</span><b>{{ machine.machine_type or 'Not available' }}</b></div>
+   <div class="meta"><span>Manufacturer</span><b>{{ machine.manufacturer or 'Not available' }}</b></div>
+   <div class="meta"><span>Model</span><b>{{ machine.model or 'Not available' }}</b></div>
+   <div class="meta"><span>Mine</span><b>{{ machine.mine_name or 'Not available' }}</b></div>
+   <div class="meta"><span>Year</span><b>{{ machine.year if machine.year is not none else 'Not available' }}</b></div>
+   <div class="meta"><span>Capacity</span><b>{{ machine.capacity or 'Not available' }}</b></div>
+   <div class="meta detail-full"><span>Description</span>
+    <p>{{ machine.description or 'No description recorded.' }}</p>
+   </div>
+  </div>
+ </div>
+
+ <div style="margin-top:20px"><a class="btn" href="/machinery">‹ All machinery</a></div>
+</main>
+
+<footer>
+ <span>Dhatu Drishti · Mining Machinery</span>
+ <span>Registered equipment · read-only view</span>
+</footer>
+
+<script>
+document.getElementById('menuBtn').addEventListener('click',()=>
+  document.getElementById('mobileNav').classList.toggle('open'));
+</script>
+</body>
+</html>
