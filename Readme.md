@@ -75,7 +75,7 @@ This application is designed for mining and industrial asset monitoring use case
 
 - Python 3.11 or newer
 - pip
-- A Gemini API key for AI report generation
+- A Gemini API key using fine tuning for AI report generation
 
 ## Local Setup
 
