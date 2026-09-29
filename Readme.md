@@ -19,7 +19,7 @@ This application is designed for mining and industrial asset monitoring use case
 - Detailed machinery pages with equipment metadata
 - Admin login and protected dashboard access
 - Machine CRUD operations in the admin interface
-- AI analysis workflow using Gemini-powered report generation
+- Ai powered report generation
 - CSV upload processing with validation and summarization
 - PDF and DOCX report export capability
 - Weather and geodata lookup support for mine context
