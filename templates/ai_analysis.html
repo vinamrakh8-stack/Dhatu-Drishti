@@ -513,8 +513,8 @@ function showResult(data,payload){
  $("resultTitle").textContent=(report.mine||payload.mine_name).toUpperCase();
  $("resultLocation").textContent=`${payload.mine_name} · ${payload.district}, ${payload.state}`;
  const cacheNote=data.cached?" · cached":"";
- $("resultMeta").textContent=`Generated ${data.generated_at||""} · model ${data.model||NA}${cacheNote}`;
- $("modelFooter").textContent=`${data.model||"AI model"} · model-generated estimates, not guaranteed observations`;
+ $("resultMeta").textContent=`Generated ${data.generated_at||""} · ${cacheNote}`;
+ $("modelFooter").textContent=`· model-generated estimates, not guaranteed observations`;
  $("disclaimerText").textContent=data.disclaimer || "Predictions are model-generated estimates, not guaranteed future observations.";
 
  /* risk badge */
